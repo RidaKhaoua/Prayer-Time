@@ -38,10 +38,17 @@ console.log(boxs[0].children[2])
 // URL of API
 const base_url = "https://api.aladhan.com/v1/timingsByAddress";
 
+      displayTimeByLocalisation();
 
-displayTimeByLocalisation();
+      displayTime();
 
-displayTime();
+      displayDate();
 
-displayDate();
+window.addEventListener("load", function (params) {
+    setTimeout(() => {
+      this.document.querySelector(".loader").classList.add("hidden");
+    }, 1500);
+})
+
+
 

@@ -168,8 +168,7 @@ function removeClassActive() {
 function addClassActive(index, time) {
     for (let box of boxs) {
         if (
-            box.lastElementChild.textContent.split(" ")[0] ===
-            time[index]
+            box.lastElementChild.textContent.split(" ")[0] === time[index]
         ) {
             box.classList.add("active");
         }
