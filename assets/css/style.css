@@ -1,0 +1,189 @@
+:root {
+    --gray-color:rgb(133,134,136); 
+    --green-color: rgb(42,140,63);
+    --bg-color: rgb(237,247,239);
+}
+
+*{
+    margin: 0 !important;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Almarai', sans-serif !important;
+}
+
+ul {
+    list-style: none;
+    padding: 0 !important;
+}
+
+a {
+    text-decoration: none;
+}
+
+.hidden {
+    display: none !important;
+}
+
+/* card alert */
+.card-alert {
+    position: absolute;
+    top:68px;
+    left: 10px;
+    width: 30%;
+    z-index: 9999;
+    word-break: break-all;
+    transform: translateX(-1000px);
+    transition: 0.5s linear;
+}
+
+.card-alert.show {
+    transform: translateX(0px);
+}
+
+
+/* end card alert */
+/* start aside */
+.main .aside ul li {
+    border-radius: 6px;
+    padding: 10px;
+    background-color: var(--bg-color);
+    color: var(--green-color);
+    cursor: pointer;
+}
+/* end aside */
+
+/* section */
+.main .content {
+    padding:10px 0;
+    background-image: url("../../assets/images/mosque-hassan-2.jpg");
+    background-size: cover;
+    background-repeat: no-repeat;
+    position: relative;
+    z-index: 1;
+    min-height: 100vh;
+
+}
+
+
+.main .content::before {
+    content: "";
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.439);
+    z-index: -1;
+}
+
+.main .content .header .logo {
+    height: 72px;
+    display: flex;
+    align-items: center;
+}
+
+.main .content .header .logo  a{
+    color: white;
+    font-weight: 700;
+    font-size: 1.40em;
+}
+
+.main .content .header .logo span {
+    color: var(--green-color);
+}
+
+.main .content .date-time {
+    color: white;
+    font-size: 5em;
+}
+
+.main .content .date-time span {
+    display: block;
+}
+
+.main .content .date-time span:last-of-type{
+    font-size: 0.2em;
+    font-style: oblique;
+}
+
+.main .content .prayer-time {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+
+
+.main .content .prayer-time .prayer-content {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+    gap: 10px;
+    align-items: center;
+    justify-content: center;
+}
+
+@media (min-width:1200px) {
+    .main .content .prayer-time .prayer-content {
+        grid-template-columns: repeat(5,130px);
+        gap: 25px;
+    }
+}
+
+
+
+.main .content .prayer-time .box {
+    padding: 12px;
+    border-radius: 10px;
+    text-align: center;
+    background-color: var(--bg-color);
+    transition: opacity 0.5s linear;
+    height: 90px;
+    display: none;
+}
+
+.main .content .prayer-time .box.show {
+    display: block;
+}
+
+
+.main .content .prayer-time .box.active {
+    border: 3px solid var(--green-color);
+    transform: scaleY(1.1);
+    height: auto;
+    background-color: white;
+}
+
+.main .content .prayer-content .box .next-prayer,
+.main .content .prayer-content .box .counter{
+    display: none;
+}
+
+
+.main .content .prayer-time .box.active .next-prayer, 
+.main .content .prayer-time .box.active .counter{
+    display: block;
+}
+
+.main .content .prayer-content .box.active .counter {
+    color: var(--green-color);
+    font-weight: 600;
+    font-size: 20px;
+}
+
+.main .content .prayer-time .box.active p:first-of-type {
+    font-weight: 600;
+}
+
+.main .content .prayer-time .box.hiden {
+    opacity: 0;
+}
+
+
+.main .content .prayer-time .box .time {
+    font-weight: 600;
+}
+
+/* start content */
