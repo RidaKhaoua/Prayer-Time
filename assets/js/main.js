@@ -13,6 +13,8 @@ const prayerTime = document.querySelector(".prayer-time");
 
 const fajrTime = document.querySelector(".box.fajr .time");
 
+const sunrise = document.querySelector(".header .sunrise span.time");
+
 const dhuhrTime = document.querySelector(".box.dhuhr .time");
 
 const asrTime = document.querySelector(".box.asr .time");
@@ -33,7 +35,7 @@ const prayerTimeContent = document.querySelector(".prayer-time");
 
 const boxs = [...document.querySelectorAll(".prayer-time .box")];
 
-console.log(boxs[0].children[2])
+let counter = 0;
 
 // URL of API
 const base_url = "https://api.aladhan.com/v1/timingsByAddress";

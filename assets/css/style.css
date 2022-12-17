@@ -134,6 +134,12 @@ a {
     color: var(--green-color);
 }
 
+.main .content .header .sunrise {
+    font-size: 13px;
+    color: var(--green-color);
+    font-weight: 600;
+}
+
 .main .content .date-time {
     color: white;
     font-size: 5em;

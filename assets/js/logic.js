@@ -13,41 +13,14 @@ function getTimeOfPrayer(date, city) {
         const timings = response.data.data.timings;
         showBox();
         displayTimeOfPrayer(timings);
-        nextPrayer(timings);
+        getNextPrayer(timings);
     })
     .catch((error) =>  {
         hideElement("prayer-time", false);
         showAlert("Data not found","alert-danger");
+        console.log(error);
         return "data not found";
     });
-}
-
-/**
- * 
- * @param {string} city name of Client
- */
-
-function showMyLocalisation(city) {
-        showLocalisation.textContent =
-            city.toLowerCase() === "el jadid" ? city + "a" : city;
-}
-
-
-// show Prayer time by localisation
-function displayTimeByLocalisation() {
-    // get my adress by ipinfo
-    const url = "https://ipinfo.io/json?token=9bf8b3ccdfc63e";
-    axios
-        .get(url)
-        .then((response) => {
-        const { city } = response.data;
-        getTimeOfPrayer(date, city);
-        showMyLocalisation(city);
-        })
-        .catch((error) => {
-            showAlert("data not found", "alert-danger");
-            throw "data not found";
-        });
 }
 
 /**
@@ -56,49 +29,95 @@ function displayTimeByLocalisation() {
  */
 
 function displayTimeOfPrayer(data) {
-    const { Fajr, Dhuhr, Asr, Maghrib, Isha } = data;
+    const { Fajr, Sunrise, Dhuhr, Asr, Maghrib, Isha } = data;
     fajrTime.textContent = Fajr + " AM";
     dhuhrTime.textContent = Dhuhr + " PM";
     asrTime.textContent = Asr + " PM";
     maghribTime.textContent = Maghrib + " PM";
     ishaTime.textContent = Isha + " PM";
+    sunrise.textContent = Sunrise + "AM";
 }
-
 
 /**
  * 
- * @param {object} timings of the prayer 
+ * @param {object} objectTiming desructing data from object 
  */
 
-function nextPrayer(timings) {
-    const {Fajr, Dhuhr, Asr, Maghrib, Isha} = timings;
-    let time = [Fajr, Dhuhr, Asr, Maghrib, Isha];
-    let getIndexOfPrayer = getNextPrayer(time);
-    countDown(time[getIndexOfPrayer]);
-    removeAndAddClassActive(getIndexOfPrayer, time);
-}
-/**
- * 
- * @param {array} time is an array content time 
- */
-
-function countDown(time) {
-    let splitTime = time.split(":");
-    let timePrayer = new Date().setHours(splitTime[0], splitTime[1], 59);
-    let counter = setInterval(() => {
-    let timeNow = new Date().getTime();
-        let difDate = timePrayer - timeNow;
-        let hours = Math.floor(
-        (difDate % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60)
-        );
-        let min = Math.floor((difDate % (1000 * 60 * 60)) / (1000 * 60));
-        let sec = Math.floor((difDate % (1000 * 60 )) / 1000 );
-        displayCountDown(time, hours, min, sec)
-        if(difDate < 0) {
-            clearInterval(counter);
-        }
+const getNextPrayer = ({Fajr, Dhuhr, Asr, Maghrib, Isha}) => {
+    let arrayOfPrayerTime = [Fajr, Dhuhr, Asr, Maghrib, Isha];
+    counter = setInterval(() => {
+            let currentTime = new Date();
+            let next = 0;
+            arrayOfPrayerTime.map((item, index) => {
+            let splitTime = item.split(":");
+            let prayerTime = new Date();
+            prayerTime.setHours(splitTime[0], splitTime[1],0);
+            let diff = prayerTime.getTime() - currentTime.getTime();
+            if (diff >= 1) {
+                if (!next || diff < next) {
+                next = diff;
+                    removeClassActive(item)
+                    addClassActive(item);
+                } 
+            } else {
+                let dateTomorrow = new Date();
+                dateTomorrow.setDate(new Date().getDate() + 1);
+                dateTomorrow.setHours(Fajr.split(":")[0], Fajr.split(":")[1], 0);
+                diff = dateTomorrow.getTime() - currentTime.getTime();
+                removeClassActive(item)
+                addClassActive(Fajr);
+            }
+                CountDown(item, diff);
+            });
     }, 1000);
+};
+
+/**
+ * 
+ * @param {*} time is the time of prayer
+ * @param {*} diffBetwenDate is the diff between time of prayer and the current time
+ */
+function CountDown(time,diffBetwenDate) {
+    const DaysByHours = 24;
+    const hourByMinute = 60;
+    const minute = 60;
+    const milleSeconde = 1000;
+
+    let hour = Math.floor(
+              (diffBetwenDate % (milleSeconde * minute * hourByMinute * DaysByHours) /  (milleSeconde * minute * hourByMinute)) 
+            );
+    let min = Math.floor((diffBetwenDate % (milleSeconde * minute * hourByMinute) / (milleSeconde * minute)));
+    let sec = Math.floor((diffBetwenDate % (milleSeconde * minute) / milleSeconde));
+    displayCountDown(time, hour, min, sec);
 }
+
+
+// remove class from box
+function removeClassActive() {
+    for (let box of boxs) {
+        box.classList.remove("active");
+        box.firstElementChild.classList.remove("active");
+    }
+}
+
+/**
+ * 
+ * @param {number} index is the place of the next Prayer in the array  
+ * @param {array} time is array of timings
+ */
+
+
+function addClassActive(time) {
+    for (let box of boxs) {
+        if (
+            box.lastElementChild.textContent.split(" ")[0] === time
+        ) {
+            box.classList.add("active");
+        }
+    }
+}
+
+
 
 /**
  * 
@@ -115,6 +134,49 @@ function  displayCountDown(time,hours, min, sec) {
             }
         }
 }
+
+
+
+/**
+ * 
+ * @param {string} city name of Client
+ */
+
+function showMyLocalisation(city, country) {
+        showLocalisation.textContent =
+            city.toLowerCase() === "el jadid" ? `${city}a, ${country}` : `${city}, ${country}`;
+}
+
+
+// show Prayer time by localisation
+function displayTimeByLocalisation() {
+    // get my adress by ipinfo
+    const url = "https://ipinfo.io/json?token=9bf8b3ccdfc63e";
+    axios
+        .get(url)
+        .then((response) => {
+        const { city, country } = response.data;
+        getTimeOfPrayer(date, city);
+        showMyLocalisation(city, country);
+        })
+        .catch((error) => {
+            showAlert("data not found", "alert-danger");
+            throw "data not found";
+        });
+}
+
+
+function calculetTimeBetweenIshaAndFajr(timeIsha, timeFajr) {
+    let getTimeIsha = new Date();
+    getTimeIsha.setHours(timeIsha.split(":")[0], timeIsha.split(":")[1]);
+    
+    let getTimeFajr = new Date();
+    getTimeFajr.setHours(timeFajr.split(":")[0], timeFajr.split(":")[1]);
+
+    let diffBetweenPrayers = getTimeIsha.getTime() - getTimeFajr.getTime();
+    let hour = diffBetweenPrayers / 1000 / 60 / 60;
+}
+
 
 /**
  * 
@@ -138,42 +200,8 @@ function formatTime(h, m, s) {
  * @param {array} time is array of timings
  */
 
-async function removeAndAddClassActive (index, time) {
-    const resolve_1 = await new Promise((resolve, reject) => {
-        setTimeout(() => {
-            removeClassActive();
-        }, 500);
-        resolve();
-    });
-    setTimeout(() => {
-        addClassActive(index, time);
-    }, 500);
-}
-
-// remove class from box
-function removeClassActive() {
-    for (let box of boxs) {
-        box.classList.remove("active");
-        box.firstElementChild.classList.remove("active");
-    }
-}
-
-/**
- * 
- * @param {number} index is the place of the next Prayer in the array  
- * @param {array} time is array of timings
- */
 
 
-function addClassActive(index, time) {
-    for (let box of boxs) {
-        if (
-            box.lastElementChild.textContent.split(" ")[0] === time[index]
-        ) {
-            box.classList.add("active");
-        }
-    }
-}
 
 // show time 
 function displayTime() {
@@ -241,36 +269,18 @@ function validateInput () {
 }
 
 
-
-/**
- * 
- * @param {array} timings is array of timing
- * @returns 
- */
-
-const getNextPrayer = (timings) => {
-    //get current datetime in milliseconds
-    const now = new Date().getTime();
-    //Those variables will store the next prayer and its index
-    var next;
-    var nextIndex;
-    //Loop through prayer array
-    timings.map((e, i) => {
-        let splitTime = e.split(":");
-        //Convert prayer time to milliseconds
-        var prayerTimeMilliseconds = new Date().setHours(splitTime[0], splitTime[1]);
-        
-        var diff = prayerTimeMilliseconds - now;
-        //check if prayer time is not past
-        if ( diff >= 1) {
-        //get index of the smallest prayer time integer
-        if (!next || diff < next) {
-            next = diff ;
-            nextIndex = i;
+// hide and show boxs
+function fadeIn() {
+    new Promise(function (resolve, reject) {
+        for (let box of boxs) {
+            box.classList.add("hiden");
         }
-        } else {
-            nextIndex = 0;
-        }
+        resolve();
+    }).then((response) => {
+        setTimeout(() => {
+            for (let box of boxs) {
+                box.classList.remove("hiden");
+            }
+        }, 1000);
     });
-    return nextIndex;
-};
+}
