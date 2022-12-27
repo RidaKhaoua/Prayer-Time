@@ -1,3 +1,47 @@
+function getContries() {
+    axios.get(`${url_contries}/flag/unicode`)
+        .then(response => {
+            const data = response.data.data;
+            displayIsoContries(data);
+        })
+        .catch(error => console.error(error))
+}
+
+
+function displayIsoContries(data){
+    return data.map(item => {
+        const option = document.createElement("option");
+        option.value = item.iso2;
+        const flage = document.createElement("span");
+        flage.textContent = item.unicodeFlag;
+        option.appendChild(flage);
+        const nameContry = document.createElement("span");
+        nameContry.textContent = item.name;
+        option.appendChild(nameContry)
+        selectIsoContry.appendChild(option);
+    })
+}
+
+function getCitiesByContries(nameContry) {
+    let res;
+    selectCities.textContent = "";
+    axios.get(url_contries)
+    .then(response =>{
+        const {data} = response.data;
+        for(let item of data) {
+            if(item.iso2 === nameContry) {
+                res = item.cities;
+            }
+        }
+        res.map(item => {
+            const option = document.createElement("option");
+            option.textContent = item;
+            selectCities.appendChild(option);
+        })
+    });
+
+}
+
 
 /**
  * 
@@ -11,12 +55,13 @@ function getTimeOfPrayer(date, city) {
     .get(`${base_url}/${query}`)
     .then((response) => {
         const timings = response.data.data.timings;
+        hideElement("prayer-time", false);
         showBox();
         displayTimeOfPrayer(timings);
         getNextPrayer(timings);
     })
     .catch((error) =>  {
-        hideElement("prayer-time", false);
+        hideElement("prayer-time", true);
         showAlert("Data not found","alert-danger");
         console.log(error);
         return "data not found";
@@ -48,16 +93,19 @@ const getNextPrayer = ({Fajr, Dhuhr, Asr, Maghrib, Isha}) => {
     counter = setInterval(() => {
             let currentTime = new Date();
             let next = 0;
+            let nextIndex = 0;
             arrayOfPrayerTime.map((item, index) => {
             let splitTime = item.split(":");
             let prayerTime = new Date();
             prayerTime.setHours(splitTime[0], splitTime[1],0);
             let diff = prayerTime.getTime() - currentTime.getTime();
+                
             if (diff >= 1) {
                 if (!next || diff < next) {
                 next = diff;
                     removeClassActive(item)
                     addClassActive(item);
+                    nextIndex = index;
                 } 
             } else {
                 let dateTomorrow = new Date();
@@ -67,7 +115,7 @@ const getNextPrayer = ({Fajr, Dhuhr, Asr, Maghrib, Isha}) => {
                 removeClassActive(item)
                 addClassActive(Fajr);
             }
-                CountDown(item, diff);
+                CountDown(item, diff, index);
             });
     }, 1000);
 };
@@ -77,7 +125,7 @@ const getNextPrayer = ({Fajr, Dhuhr, Asr, Maghrib, Isha}) => {
  * @param {*} time is the time of prayer
  * @param {*} diffBetwenDate is the diff between time of prayer and the current time
  */
-function CountDown(time,diffBetwenDate) {
+function CountDown(time,diffBetwenDate, index) {
     const DaysByHours = 24;
     const hourByMinute = 60;
     const minute = 60;
@@ -88,6 +136,9 @@ function CountDown(time,diffBetwenDate) {
             );
     let min = Math.floor((diffBetwenDate % (milleSeconde * minute * hourByMinute) / (milleSeconde * minute)));
     let sec = Math.floor((diffBetwenDate % (milleSeconde * minute) / milleSeconde));
+    if(hour == 0 && min === 0 && sec === 0) {
+        showNotification(index);
+    }
     displayCountDown(time, hour, min, sec);
 }
 
@@ -166,18 +217,6 @@ function displayTimeByLocalisation() {
 }
 
 
-function calculetTimeBetweenIshaAndFajr(timeIsha, timeFajr) {
-    let getTimeIsha = new Date();
-    getTimeIsha.setHours(timeIsha.split(":")[0], timeIsha.split(":")[1]);
-    
-    let getTimeFajr = new Date();
-    getTimeFajr.setHours(timeFajr.split(":")[0], timeFajr.split(":")[1]);
-
-    let diffBetweenPrayers = getTimeIsha.getTime() - getTimeFajr.getTime();
-    let hour = diffBetweenPrayers / 1000 / 60 / 60;
-}
-
-
 /**
  * 
  * @param {number} h is hours 
@@ -207,7 +246,8 @@ function formatTime(h, m, s) {
 function displayTime() {
     setInterval(() => {
         const currentDate = new Date();
-        showTime.textContent = `${currentDate.getHours()}:${currentDate.getMinutes() < 10 ? "0" + currentDate.getMinutes() : currentDate.getMinutes()}`;
+        showTime.textContent = `${currentDate.getHours() < 10 ? "0" + currentDate.getHours() : currentDate.getHours() }
+        :${currentDate.getMinutes() < 10 ? "0" + currentDate.getMinutes() : currentDate.getMinutes()}`;
     }, 1000);
 }
 
@@ -242,10 +282,10 @@ function showAlert(msg, colorOfAlert) {
 function hideElement(nameElement, isShow) {
     const elemnt = document.querySelector(`.${nameElement}`);
     if(isShow) {
-        elemnt.classList.remove("hidden");
+        elemnt.classList.add("hidden");
         return;
     }
-    elemnt.classList.add("hidden");
+    elemnt.classList.remove("hidden");
 }
 
 // create this function because all the box is hidden by default and show it if response has successfully
@@ -257,17 +297,14 @@ function showBox() {
 
 // validate input
 function validateInput () {
-    console.log(inputSearch.value)
-    if(inputSearch.value === "") {
+    if(inputSearch.value === "" && inputSearch.value.length >=2) {
         showAlert("the field can not be empty", "alert-danger")
         return false;
     } else {
         hideElement("prayer-time", true)
     }
     return true;
-
 }
-
 
 // hide and show boxs
 function fadeIn() {
@@ -283,4 +320,38 @@ function fadeIn() {
             }
         }, 1000);
     });
+}
+
+/**
+ * 
+ * @param {number} index of current prayer 
+*/
+
+function showNotification(index) {
+    const salateNames = ["Fajr", "Dhuhr", "Asr", "Maghrib", "Isha"];
+    // check permission of user if the autrosation is granted
+    Notification.requestPermission().then(perm => {
+        if(perm === "granted") {
+            const notification = new Notification("Prayer Time", {
+                body: `Prayer Now is: ${salateNames[index]}`,
+                icon: "../../assets/images/icon-adhan.png",
+                tag: "start adhan",
+                requireInteraction: true,
+            });
+            startAdhan();
+            
+            notification.addEventListener("close", (e) => {
+                pauseAdhan();
+            })
+        }
+    })
+}
+
+
+function startAdhan() {
+    audioAdhan.play();
+}
+
+function pauseAdhan(params) {
+    audioAdhan.pause();
 }

@@ -48,13 +48,32 @@
                 </div>
             </div>
             <!-- end header -->
+
+            <!-- Date Time -->
             <div class="date-time text-center mb-5">
                 <span class="time"></span>
                 <span class="date"></span>
             </div>
-            <div class="search d-flex justify-content-center pt-5 pb-5">
-                <input type="text" class="form-control w-75" placeholder="search by city">
+            <!-- End Date Time -->
+
+            <!-- Search -->
+            <div class="search row justify-content-center pt-5 pb-5 gap-3">
+                <div class="col-md-3">
+                    <select name="isoContry" id="iso-contry" class="form-select iso-contry">
+                        <option value="">Contry</option>
+                    </select>
+                </div>
+                <div class="col-md-4">
+                    <select name="cities" id="cities" class="form-select cities">
+                        <option value="">Select Cities</option>
+                    </select>
+                </div>
+                
+                <!-- <input type="text" class="form-control w-75" placeholder="search by city"> -->
             </div>
+            <!-- End Search -->
+
+            <!-- Prayer Time -->
             <div class="prayer-time">
                 <div class="container">
                     <div class="prayer-content">
@@ -91,6 +110,16 @@
                     </div>
                 </div>
             </div>
+            <!-- End Prayer -->
+
+            <!-- Audio -->
+            <div class="adhan-audio">
+                <audio>
+                    <source src="assets/audio/adhan.mp3" type="audio/mpeg">
+                </audio>
+            </div>
+            <!-- End Audio -->
+            
         </section>
         <!-- end section content -->
 

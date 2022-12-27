@@ -37,20 +37,37 @@ const boxs = [...document.querySelectorAll(".prayer-time .box")];
 
 let counter = 0;
 
+const audioAdhan = document.querySelector(".adhan-audio audio");
+
+const selectIsoContry = document.querySelector("#iso-contry");
+
+const selectCities = document.querySelector("#cities");
+
+let contries;
+
 // URL of API
+
 const base_url = "https://api.aladhan.com/v1/timingsByAddress";
 
-      displayTimeByLocalisation();
+// URL of Contries 
+const url_contries = "https://countriesnow.space/api/v0.1/countries";
 
-      displayTime();
 
-      displayDate();
+// triger function 
+  getContries();
+  displayTimeByLocalisation();
+
+  displayTime();
+
+  displayDate();
+
+
 
 window.addEventListener("load", function (params) {
-    setTimeout(() => {
-      this.document.querySelector(".loader").classList.add("hidden");
-    }, 1500);
-})
+  setTimeout(() => {
+    this.document.querySelector(".loader").classList.add("hidden");
+  }, 1500);
+});
 
 
 
