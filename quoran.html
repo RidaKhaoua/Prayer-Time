@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- bootstrap  -->
+    <link rel="stylesheet" href="assets/css/bootstrap.min.css">
+    <!-- google font -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Almarai:wght@300;400;700&display=swap" rel="stylesheet">
+    
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=El+Messiri:wght@500&display=swap" rel="stylesheet">
+    
+    <!-- font awsome -->
+    <link rel="stylesheet" href="assets/css/all.min.css">
+    
+    <!-- style css -->
+    <link rel="stylesheet" href="assets/css/quoran.css">
+    <link rel="stylesheet" href="assets/css/style.css">
+    
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+    <title>Quoran</title>
+</head>
+<body>
+    <div class="alert card-alert">
+    
+    </div>
+    <div class="loader">
+        <div></div>
+    </div>
+
+    <main class="row main quoran">
+        <!-- start section -->
+        <section class="content col-md-10">
+            <!-- header -->
+            <div class="header d-flex justify-content-center">
+                <div class="container d-flex align-items-center justify-content-between">
+                    <div class="logo">
+                        <a href="index.html">Prayer <span>Time</span></a>
+                    </div>
+                    <!-- <div class="localisation text-white">
+                        <i class="fa-solid fa-location-crosshairs fa-2xs"></i>
+                        <span></span>
+                        <div class="sunrise">
+                            <i class="fa-solid fa-sun fa-spin"></i>
+                            <span>Sunrise:</span>
+                            <span class="time"></span>
+                        </div>
+                    </div> -->
+                </div>
+            </div>
+            <!-- end header -->
+
+            <!-- boxs -->
+            <div class="boxs">
+            </div>
+            <!-- end boxs -->
+
+            <!-- display quoran -->
+            <div class="display-quoran">
+                <div class="top mb-2">
+                    <div class="name-surah">Name Of Surah: <span></span> </div>
+                    <div class="close">
+                        <i class="fa-solid fa-xmark fa-xl"></i>
+                    </div>
+                </div>
+                <div class="body">
+                    <div class="name-surah">
+                        <span></span>
+                    </div>
+                    <div class="body-text"></div>
+                </div>
+                <div class="bottom">
+                    <div class="prev">
+                        <button type="button">prev</button>
+                    </div>
+                    <div class="next">
+                        <button type="button">next</button>
+                    </div>
+                </div>
+            </div>
+            <!-- end display quoran -->
+
+        </section>
+        <!-- end section -->
+        
+        <!-- aside -->
+        <aside class="col-md-2 aside p-3 pt-5 pb-5">
+            <ul>
+                <li class="text-center mb-2">
+                    <a href="index.html">
+                        <i class="fa-solid fa-mosque fa-xl"></i>
+                        <p class="mt-2">اوقات صلاة</p>
+                    </a>
+                </li>
+                <li class="text-center mb-2">
+                    <a href="quoran.html">
+                        <i class="fa-solid fa-book-quran fa-xl"></i>
+                        <p class="mt-2">قران الكريم</p>
+                    </a>
+                </li>
+            </ul>
+        </aside>
+        <!-- end aside -->
+            <script src="./node_modules/axios/dist/axios.min.js"></script>
+            <script src="./assets/js/all.min.js"></script>
+            <script src="./assets/js/logic.js" type="module"></script>
+            <script src="./assets/js/quoran.js" type="module"></script>
+            <script src="./assets/js/addEventListner.js" type="module"></script>
+        </main>
+</body>
+</html>

@@ -1,5 +1,11 @@
+
+import * as all from "./element.js"
+
+// variables 
+let indexAyah;
+
 function getContries() {
-    axios.get(`${url_contries}/flag/unicode`)
+    axios.get(`${all.url_contries}/flag/unicode`)
         .then(response => {
             const data = response.data.data;
             displayIsoContries(data);
@@ -7,6 +13,11 @@ function getContries() {
         .catch(error => console.error(error))
 }
 
+/**
+ * 
+ * @param {object} data contain data of contries  
+ * @returns 
+ */
 
 function displayIsoContries(data){
     return data.map(item => {
@@ -18,25 +29,32 @@ function displayIsoContries(data){
         const nameContry = document.createElement("span");
         nameContry.textContent = item.name;
         option.appendChild(nameContry)
-        selectIsoContry.appendChild(option);
+        all.selectIsoContry.appendChild(option);
     })
 }
 
+/**
+ * 
+ * @param {string} nameContry 
+ */
+
 function getCitiesByContries(nameContry) {
     let res;
-    selectCities.textContent = "";
-    axios.get(url_contries)
+    all.selectCities.textContent = "";
+    axios.get(all.url_contries)
     .then(response =>{
         const {data} = response.data;
+        console.log(data);
         for(let item of data) {
             if(item.iso2 === nameContry) {
-                res = item.cities;
+                res = item.cities; // store array of cities
             }
         }
+        
         res.map(item => {
             const option = document.createElement("option");
             option.textContent = item;
-            selectCities.appendChild(option);
+            all.selectCities.appendChild(option);
         })
     });
 
@@ -52,7 +70,7 @@ function getCitiesByContries(nameContry) {
 function getTimeOfPrayer(date, city) {
     const query = `${date}?address=${city}&method=04`;
     axios
-    .get(`${base_url}/${query}`)
+    .get(`${all.base_url}/${query}`)
     .then((response) => {
         const timings = response.data.data.timings;
         hideElement("prayer-time", false);
@@ -63,7 +81,7 @@ function getTimeOfPrayer(date, city) {
     .catch((error) =>  {
         hideElement("prayer-time", true);
         showAlert("Data not found","alert-danger");
-        console.log(error);
+        console.error(error);
         return "data not found";
     });
 }
@@ -75,22 +93,24 @@ function getTimeOfPrayer(date, city) {
 
 function displayTimeOfPrayer(data) {
     const { Fajr, Sunrise, Dhuhr, Asr, Maghrib, Isha } = data;
-    fajrTime.textContent = Fajr + " AM";
-    dhuhrTime.textContent = Dhuhr + " PM";
-    asrTime.textContent = Asr + " PM";
-    maghribTime.textContent = Maghrib + " PM";
-    ishaTime.textContent = Isha + " PM";
-    sunrise.textContent = Sunrise + "AM";
+    all.fajrTime.textContent = Fajr + " AM";
+    all.dhuhrTime.textContent = Dhuhr + " PM";
+    all.asrTime.textContent = Asr + " PM";
+    all.maghribTime.textContent = Maghrib + " PM";
+    all.ishaTime.textContent = Isha + " PM";
+    all.sunrise.textContent = Sunrise + "AM";
 }
 
 /**
  * 
  * @param {object} objectTiming desructing data from object 
  */
-
+export let objVariables = {
+   counter: 0,
+ };
 const getNextPrayer = ({Fajr, Dhuhr, Asr, Maghrib, Isha}) => {
     let arrayOfPrayerTime = [Fajr, Dhuhr, Asr, Maghrib, Isha];
-    counter = setInterval(() => {
+    objVariables.counter = setInterval(() => {
             let currentTime = new Date();
             let next = 0;
             let nextIndex = 0;
@@ -99,7 +119,6 @@ const getNextPrayer = ({Fajr, Dhuhr, Asr, Maghrib, Isha}) => {
             let prayerTime = new Date();
             prayerTime.setHours(splitTime[0], splitTime[1],0);
             let diff = prayerTime.getTime() - currentTime.getTime();
-                
             if (diff >= 1) {
                 if (!next || diff < next) {
                 next = diff;
@@ -124,7 +143,10 @@ const getNextPrayer = ({Fajr, Dhuhr, Asr, Maghrib, Isha}) => {
  * 
  * @param {*} time is the time of prayer
  * @param {*} diffBetwenDate is the diff between time of prayer and the current time
- */
+ * @param {*} index is the index of current prayer
+
+*/
+
 function CountDown(time,diffBetwenDate, index) {
     const DaysByHours = 24;
     const hourByMinute = 60;
@@ -145,7 +167,7 @@ function CountDown(time,diffBetwenDate, index) {
 
 // remove class from box
 function removeClassActive() {
-    for (let box of boxs) {
+    for (let box of all.boxs) {
         box.classList.remove("active");
         box.firstElementChild.classList.remove("active");
     }
@@ -153,13 +175,11 @@ function removeClassActive() {
 
 /**
  * 
- * @param {number} index is the place of the next Prayer in the array  
- * @param {array} time is array of timings
+ * @param {*} time is the time of prayer
  */
 
-
 function addClassActive(time) {
-    for (let box of boxs) {
+    for (let box of all.boxs) {
         if (
             box.lastElementChild.textContent.split(" ")[0] === time
         ) {
@@ -179,7 +199,7 @@ function addClassActive(time) {
  */
 
 function  displayCountDown(time,hours, min, sec) {
-        for (let box of boxs) {
+        for (let box of all.boxs) {
             if (box.lastElementChild.textContent.split(" ")[0] === time ) {
                     box.children[2].textContent = formatTime(hours, min, sec);
             }
@@ -194,7 +214,7 @@ function  displayCountDown(time,hours, min, sec) {
  */
 
 function showMyLocalisation(city, country) {
-        showLocalisation.textContent =
+        all.showLocalisation.textContent =
             city.toLowerCase() === "el jadid" ? `${city}a, ${country}` : `${city}, ${country}`;
 }
 
@@ -207,11 +227,12 @@ function displayTimeByLocalisation() {
         .get(url)
         .then((response) => {
         const { city, country } = response.data;
-        getTimeOfPrayer(date, city);
+        getTimeOfPrayer(all.date, city);
         showMyLocalisation(city, country);
         })
         .catch((error) => {
             showAlert("data not found", "alert-danger");
+            console.log(error)
             throw "data not found";
         });
 }
@@ -246,13 +267,13 @@ function formatTime(h, m, s) {
 function displayTime() {
     setInterval(() => {
         const currentDate = new Date();
-        showTime.textContent = `${currentDate.getHours() < 10 ? "0" + currentDate.getHours() : currentDate.getHours() }
+        all.showTime.textContent = `${currentDate.getHours() < 10 ? "0" + currentDate.getHours() : currentDate.getHours() }
         :${currentDate.getMinutes() < 10 ? "0" + currentDate.getMinutes() : currentDate.getMinutes()}`;
     }, 1000);
 }
 
 function displayDate() {
-    showDate.textContent = currentDate.toDateString();
+    all.showDate.textContent = all.currentDate.toDateString();
 }
 
 
@@ -290,7 +311,7 @@ function hideElement(nameElement, isShow) {
 
 // create this function because all the box is hidden by default and show it if response has successfully
 function showBox() {
-    for(let box of boxs) {
+    for(let box of all.boxs) {
         box.classList.add("show");
     }
 }
@@ -309,13 +330,13 @@ function validateInput () {
 // hide and show boxs
 function fadeIn() {
     new Promise(function (resolve, reject) {
-        for (let box of boxs) {
+        for (let box of all.boxs) {
             box.classList.add("hiden");
         }
         resolve();
     }).then((response) => {
         setTimeout(() => {
-            for (let box of boxs) {
+            for (let box of all.boxs) {
                 box.classList.remove("hiden");
             }
         }, 1000);
@@ -352,6 +373,159 @@ function startAdhan() {
     audioAdhan.play();
 }
 
-function pauseAdhan(params) {
+function pauseAdhan() {
     audioAdhan.pause();
+}
+
+
+// function get All surah
+function getAllSurah() {
+    axios.get(all.url_surah)
+        .then(response => displaySurah(response.data.data))
+        .catch(error => console.log(error))
+}
+
+/**
+ * 
+ * @param {object} data is array of surahs  
+ * @returns 
+ */
+
+function displaySurah(data) {
+    try {
+        return data.map((item) => {
+            const { number, englishName, englishNameTranslation } = item;
+            const box = document.createElement("div");
+            box.className = "box";
+            box.dataset.number = number;
+            const boxTop = document.createElement("div");
+            boxTop.className = "box-top";
+            const numberSurah = document.createElement("div");
+            numberSurah.className = "number-surah";
+            numberSurah.textContent = number;
+            boxTop.appendChild(numberSurah);
+            const favSurah = document.createElement("div");
+            favSurah.className = "fav-surah";
+            const iconFav = document.createElement("i");
+            iconFav.className ="fa-regular fa-heart";
+            favSurah.appendChild(iconFav);
+            boxTop.appendChild(favSurah);
+            box.appendChild(boxTop)
+            const boxBottom = document.createElement("div");
+            boxBottom.className = "box-bottom";
+            const nameSurah = document.createElement("p");
+            nameSurah.className = "name-surah";
+            nameSurah.textContent = englishName;
+            boxBottom.appendChild(nameSurah);
+            const nameSurahTranslate = document.createElement("p");
+            nameSurahTranslate.textContent = englishNameTranslation;
+            boxBottom.appendChild(nameSurahTranslate);
+            box.appendChild(boxBottom);
+            box.addEventListener("click", function name(params) {
+                getSurah(this.dataset.number);
+                all.displayQuoran.classList.add("active");
+                indexAyah = +this.dataset.number;
+            })
+            all.quoranBoxs.appendChild(box);
+        });
+    } catch (error) {
+        console.log(error);
+    }
+
+}
+
+/**
+ * 
+ * @param {int} number get surah by number 
+ */
+function getSurah(number) {
+    
+    const url = `http://api.alquran.cloud/v1/surah/${number}/ar.alafasy`;
+    axios.get(url)
+        .then(response => {
+            displaySpesifiqueSurah(response.data.data.ayahs);
+            dispplayNameOfSorah(response.data.data);
+            setTimeout(() => {
+                all.buttonNext.classList.remove("block");
+                all.buttonPrev.classList.remove("block");
+            }, 1000);
+        })
+        .catch(error => console.log(error));
+}
+
+/**
+ * 
+ * @param {object} data get text of surah
+ */
+
+function displaySpesifiqueSurah(data) {
+    all.quoranBody.textContent = "";
+    try {
+        data.map((item) => (all.quoranBody.textContent += item.text + " "));
+    } catch (error) {
+        console.log(error);
+    }
+}
+
+/**
+ * 
+ * @param {*} data get name of surah
+ */
+
+function dispplayNameOfSorah(data) {
+    try {
+        all.nameSurah.map(item => {
+            item.textContent = "";
+            item.textContent = data.name
+        })
+    } catch (error) {
+        console.log(error);
+    }
+}
+
+function  showQuoran() {
+    all.displayQuoran.classList.remove("active");
+}
+
+function closeQuoran() {
+    all.displayQuoran.classList.remove("active");
+}
+
+function getNextAyah() {
+    const numberOfAyah = 604;
+    indexAyah +=1;
+    if (indexAyah <= numberOfAyah) {
+        getSurah(indexAyah);
+    }
+}
+
+function getPrevAyah() {
+    if(indexAyah > 1) {
+        indexAyah -=1;
+        getSurah(indexAyah);
+    }
+}
+
+function loader() {
+    window.addEventListener("load", function (params) {
+        setTimeout(() => {
+            this.document.querySelector(".loader").classList.add("hidden");
+        }, 1500);
+    });
+}
+
+export {
+    getContries,
+    displayTimeByLocalisation,
+    displayTime,
+    displayDate,
+    getAllSurah,
+    getCitiesByContries, 
+    fadeIn,
+    getTimeOfPrayer,
+    loader,
+    getSurah,
+    closeQuoran,
+    getNextAyah,
+    getPrevAyah
 }

@@ -1,0 +1,195 @@
+
+/* start quoran */
+.quoran .boxs {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(218px, 1fr));
+    gap: 10px;
+    padding: 30px;
+}
+
+.quoran .boxs .box {
+    background-color: white;
+    padding: 10px;
+    border-radius: 10px;
+    position: relative;
+    z-index: 1;
+    overflow: hidden;
+    cursor: pointer;
+}
+
+.quoran .boxs .box::before {
+    content: "";
+    position: absolute;
+    z-index: -1;
+    top: 0;
+    left: -20px;
+    width: 0%;
+    height: 100%;
+    background-color: rgba(6, 129, 6, 0.365);
+    transform: skewX(-20deg);
+    transition: width 0.5s linear;
+}
+
+.quoran .boxs .box:hover::before {
+    width: 70%;
+}
+
+
+.quoran .boxs .box .box-top {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px !important;
+}
+
+.quoran .boxs .box .box-top .number-surah {
+    width: 30px;
+    height: 30px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    background-color: var(--bg-color);
+    color: var(--green-color);
+    font-weight: 700;
+}
+
+.quoran .boxs .box .box-top .fav-surah {
+    font-size: 22px;
+    cursor: pointer;
+}
+
+.quoran .boxs .box .box-bottom .name-surah {
+    margin-bottom: 8px !important;
+    color: black;
+    font-weight: 600;
+    text-transform: capitalize;
+}
+
+
+
+.quoran .boxs .box .box-bottom .name-surah-english {
+    color: var(--gray-color);
+    text-transform: uppercase;
+    font-size: 13px;
+}
+
+.quoran .display-quoran {
+    width: 540px;
+    padding: 20px;
+    border-radius: 6px;
+    background-color: white;
+    position: fixed;
+    z-index: 9999;
+    top: 20px;
+    left: 50%;
+    transform: translate(-50%, -1000%);
+    box-shadow: 0px 0px 10px #ddd;
+    transition: transform 1s linear;
+}
+
+.quoran .display-quoran.active {
+    transform: translate(-50%, 0%);
+}
+
+.quoran .display-quoran .top {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.quoran .display-quoran .name-surah span {
+    font-weight: bold;
+    font-size: 20px;
+}
+
+.quoran .display-quoran .close {
+    cursor: pointer;
+}
+
+
+.quoran .display-quoran .body {
+    direction: rtl;
+    background-image: url(../../assets/images/bg-quoran.jpg);
+    background-position: 0px -40px;
+    background-repeat: no-repeat;
+    background-size: cover;
+    width: 500px;
+    height: 500px;
+    font-family: 'El Messiri', sans-serif;
+    font-size: 21px;
+    text-align: center;
+    line-height: 2;
+    word-spacing: 10px;
+    overflow-y: scroll;
+    margin: auto !important;
+    margin-bottom: 20px !important;
+    padding: 15px 43px;
+    border-radius: 6px;
+}
+
+.quoran .display-quoran .body .name-surah {
+    background-image: url("../../assets/images/beutiful-islamic-frame.png");
+    background-size: cover;
+    background-repeat: no-repeat;
+    width: 362px;
+    height: 120px;
+    margin: auto;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.quoran .display-quoran .body::-webkit-scrollbar {
+    width: 10px;
+}
+
+.quoran .display-quoran .body::-webkit-scrollbar-thumb {
+    background-color: grey;
+    border-radius: 6px;
+}
+
+.quoran .display-quoran .body::-webkit-scrollbar-track {
+    background-color: #ccc;
+}
+
+.quoran .display-quoran .bottom {
+    display: flex;
+    align-items: center;
+    justify-content: space-evenly;
+    flex-wrap: wrap;
+}
+
+.quoran .display-quoran .bottom button {
+    border: none;
+    padding: 5px 20px;
+    border-radius: 6px;
+    color: white;
+    text-transform: capitalize;
+    cursor: pointer;
+    transition: opacity 0.5s linear;
+}
+
+.quoran .display-quoran .bottom button:hover {
+    opacity: 0.8;
+}
+
+.quoran .display-quoran .bottom .next button {
+    background-color: var(--green-color);
+}
+
+.quoran .display-quoran .bottom .next.block button,
+.quoran .display-quoran .bottom .prev.block button{
+    pointer-events: none;
+    opacity: 0.8;
+}
+
+.quoran .display-quoran .bottom .next.block,
+.quoran .display-quoran .bottom .prev.block {
+    cursor: no-drop;
+}
+
+.quoran .display-quoran .bottom .prev button {
+    background-color: var(--gray-color);
+}
+/* end quoran */

@@ -5,13 +5,14 @@
 }
 
 *{
-    margin: 0 !important;
+    margin: 0;
     padding: 0;
     box-sizing: border-box;
 }
 
 body {
     font-family: 'Almarai', sans-serif !important;
+    overflow-x: hidden;
 }
 
 ul {
@@ -88,10 +89,15 @@ a {
 .main .aside ul li {
     border-radius: 6px;
     padding: 10px;
-    background-color: var(--bg-color);
-    color: var(--green-color);
-    cursor: pointer;
+    font-size: 13px;
+    white-space: nowrap;
+    font-weight: 600;
 }
+
+.main .aside ul li a {
+    color: var(--green-color);
+}
+
 /* end aside */
 
 /* section */
