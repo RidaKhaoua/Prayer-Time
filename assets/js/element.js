@@ -54,11 +54,10 @@ export const buttonPrev = document.querySelector(".quoran .display-quoran .botto
 export const displayQuoran = document.querySelector(".quoran .display-quoran");
 
 export const nameSurah = [...document.querySelectorAll(".quoran .display-quoran .name-surah span")];
-console.log(nameSurah)
+
 export const closeQuoran = document.querySelector(".quoran .display-quoran .close")
 
 // URL of API
-
 export const base_url = "https://api.aladhan.com/v1/timingsByAddress";
 
 // URL of Contries

@@ -441,7 +441,7 @@ function displaySurah(data) {
  */
 function getSurah(number) {
     
-    const url = `http://api.alquran.cloud/v1/surah/${number}/ar.alafasy`;
+    const url = `https://api.alquran.cloud/v1/surah/${number}/ar.alafasy`;
     axios.get(url)
         .then(response => {
             displaySpesifiqueSurah(response.data.data.ayahs);
