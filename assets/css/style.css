@@ -87,11 +87,30 @@ a {
 
 /* start aside */
 .main .aside ul li {
+    position: relative;
     border-radius: 6px;
     padding: 10px;
     font-size: 13px;
     white-space: nowrap;
     font-weight: 600;
+}
+
+.main .aside ul li.active::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    background-color: #8bc34a9e;
+    height: 100%;
+    width: 8px;
+    border-top-right-radius: 10px;
+    border-bottom-right-radius: 10px;
+    transition:  0.5s linear;
+    z-index: -1;
+}
+
+.main .aside ul li.active:hover::before {
+    width: 100%;
 }
 
 .main .aside ul li a {
@@ -180,7 +199,7 @@ a {
 .main .content .prayer-time .prayer-content {
     display: grid;
     grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
-    gap: 10px;
+    gap: 18px;
     align-items: center;
     justify-content: center;
 }
