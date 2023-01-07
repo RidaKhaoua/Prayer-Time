@@ -64,4 +64,4 @@ export const base_url = "https://api.aladhan.com/v1/timingsByAddress";
 // URL of Contries
 export const url_contries = "https://countriesnow.space/api/v0.1/countries";
 
-export const url_surah = "http://api.alquran.cloud/v1/surah";
+export const url_surah = "https://api.alquran.cloud/v1/surah";
