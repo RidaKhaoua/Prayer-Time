@@ -77,6 +77,7 @@ function getTimeOfPrayer(date, city) {
         showBox();
         displayTimeOfPrayer(timings);
         getNextPrayer(timings);
+
     })
     .catch((error) =>  {
         hideElement("prayer-time", true);
